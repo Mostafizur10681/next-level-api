@@ -35,8 +35,6 @@ class User extends Authenticatable
      */
 
 
-
-    //protected $fillable = false;
     protected $hidden = [
         'password',
         'remember_token',
