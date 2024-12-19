@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +26,8 @@ Route::prefix('auth')->group(function () {
         Route::get('/users', [UserController::class, 'users']);
         Route::get('/user/{userId}', [UserController::class, 'user']);
         Route::put('/user/profile/{userId}', [UserController::class, 'updateUserProfile']);
-
+        Route::post('/service/type', [ServiceController::class, 'postServiceType']);
+        Route::post('/service/postService', [ServiceController::class, 'postService']);
     });
 });
 
