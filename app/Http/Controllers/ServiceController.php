@@ -6,6 +6,7 @@ use App\Models\LServiceType;
 use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class ServiceController extends Controller
 {
@@ -37,16 +38,19 @@ class ServiceController extends Controller
     public function postService(Request $request)
     {
         try {
-            $postdata = $request->all();
+            $validatedData = $request->validate([
+                'service_name' => 'required|string|max:255',
+                'service_types_id' => 'required|integer',
+                'service_min_price' => 'nullable|numeric',
+                'service_max_price' => 'nullable|numeric',
+                'service_title' => 'required|string|max:255',
+                'service_description' => 'nullable|string',
+                'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240',  // 5MB max
+            ]);
 
             // Handle file upload if a file is attached
             if ($request->hasFile('service_attachment')) {
                 $file = $request->file('service_attachment');
-
-                // Validate file type (optional)
-                $request->validate([
-                    'service_attachment' => 'mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240',  // 5MB max
-                ]);
 
                 // Get file details
                 $fileName = time() . '_' . $file->getClientOriginalName();
@@ -56,15 +60,15 @@ class ServiceController extends Controller
 
             // Create Service
             $service = new Services();
-            $service->service_name = $postdata['service_name'];
-            $service->service_types_id = $postdata['service_types_id'];
-            $service->service_min_price = $postdata['service_min_price']??'';
-            $service->service_max_price = $postdata['service_max_price']??'';
-            $service->service_title = $postdata['service_title'];
-            $service->service_description = $postdata['service_description']??'';
-            $service->service_attachment = $filePath??'';
-            $service->file_type = $fileType??'';
-            $service->file_name = $fileName??'';
+            $service->service_name = $validatedData['service_name'];
+            $service->service_types_id = $validatedData['service_types_id'];
+            $service->service_min_price = $validatedData['service_min_price'] ?? '';
+            $service->service_max_price = $validatedData['service_max_price'] ?? '';
+            $service->service_title = $validatedData['service_title'];
+            $service->service_description = $validatedData['service_description'] ?? '';
+            $service->service_attachment = $filePath ?? '';
+            $service->file_type = $fileType ?? '';
+            $service->file_name = $fileName ?? '';
             $service->created_by = Auth::user()->id;
             $service->save();
 
@@ -72,11 +76,17 @@ class ServiceController extends Controller
                 'message' => 'Service created successfully!',
                 'service' => $service,
             ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed.',
+                'details' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'An error occurred during service creation.',
-                'details' => $e->getMessage()
+                'details' => $e->getMessage(),
             ], 500);
         }
     }
+
 }
