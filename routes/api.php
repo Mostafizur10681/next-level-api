@@ -27,9 +27,21 @@ Route::prefix('auth')->group(function () {
         Route::get('/users', [UserController::class, 'users']);
         Route::get('/user/{userId}', [UserController::class, 'user']);
         Route::put('/user/profile/{userId}', [UserController::class, 'updateUserProfile']);
-        Route::post('/service/type', [ServiceController::class, 'insertServiceType']);
-        Route::post('/service/postService', [ServiceController::class, 'insertService']);
-        Route::post('/menu/postMenu', [MenuController::class, 'insertMenu']);
+
+        Route::prefix('service')->group(function () {
+            Route::post('/type', [ServiceController::class, 'insertServiceType']);
+            Route::post('/postService', [ServiceController::class, 'insertService']);
+            Route::get('/services', [ServiceController::class, 'getActiveServices']);
+            Route::get('/services/{serviceId}', [ServiceController::class, 'getActiveService']);
+            Route::put('/updateService/{serviceId}', [ServiceController::class, 'updateService']);
+        });
+
+        Route::prefix('menu')->group(function () {
+            Route::post('/insertMenu', [MenuController::class, 'insertMenu']);
+            Route::get('/menus', [MenuController::class, 'getActiveMenus']);
+            Route::get('/menus/{menuId}', [MenuController::class, 'getActiveMenu']);
+            Route::put('/updateMenu/{menuId}', [MenuController::class, 'updateMenu']);
+        });
     });
 });
 

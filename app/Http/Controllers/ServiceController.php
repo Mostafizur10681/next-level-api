@@ -89,4 +89,99 @@ class ServiceController extends Controller
         }
     }
 
+    public function getActiveServices()
+    {
+        $services = Services::where('active_yn', 'Y')->get();
+
+        if ($services) {
+            return response()->json([
+                'services' => $services
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Menu not found'
+            ], 404);
+        }
+    }
+
+    public function getActiveService($serviceId)
+    {
+        $service = Services::find($serviceId);
+
+        if ($service) {
+            return response()->json([
+                'service' => $service
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Menu not found'
+            ], 404);
+        }
+    }
+
+    public function updateService(Request $request, $id)
+    {
+        try {
+            // Validate input data
+            $validatedData = $request->validate([
+                'service_name' => 'required|string|max:255',
+                'service_types_id' => 'required|integer',
+                'service_min_price' => 'nullable|numeric',
+                'service_max_price' => 'nullable|numeric',
+                'service_title' => 'required|string|max:255',
+                'service_description' => 'nullable|string',
+                'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240', // 5MB max
+            ]);
+
+            $service = Services::find($id);
+
+            if (!$service) {
+                return response()->json([
+                    'error' => 'Service not found.',
+                ], 404);
+            }
+
+            // Handle file upload if a new file is provided
+            if ($request->hasFile('service_attachment')) {
+                $file = $request->file('service_attachment');
+
+                // Get file details
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('service_attachments', $fileName, 'public'); // Save file to public storage
+                $fileType = $file->getMimeType(); // Get the file MIME type
+
+                // Update file-related fields
+                $service->service_attachment = $filePath;
+                $service->file_type = $fileType;
+                $service->file_name = $fileName;
+            }
+
+            // Update other service attributes
+            $service->service_name = $validatedData['service_name'];
+            $service->service_types_id = $validatedData['service_types_id'];
+            $service->service_min_price = $validatedData['service_min_price'] ?? '';
+            $service->service_max_price = $validatedData['service_max_price'] ?? '';
+            $service->service_title = $validatedData['service_title'];
+            $service->service_description = $validatedData['service_description'] ?? '';
+            $service->updated_by = Auth::user()->id;
+            $service->save();
+
+            return response()->json([
+                'message' => 'Service updated successfully!',
+                'service' => $service,
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed.',
+                'details' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during service update.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
 }
