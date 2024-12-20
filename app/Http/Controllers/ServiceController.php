@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class ServiceController extends Controller
 {
-    public function postServiceType(Request $request)
+    public function insertServiceType(Request $request)
     {
         try {
             $postdata= $request->all();
@@ -35,7 +35,7 @@ class ServiceController extends Controller
         }
     }
 
-    public function postService(Request $request)
+    public function insertService(Request $request)
     {
         try {
             $validatedData = $request->validate([

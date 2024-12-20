@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,8 +27,9 @@ Route::prefix('auth')->group(function () {
         Route::get('/users', [UserController::class, 'users']);
         Route::get('/user/{userId}', [UserController::class, 'user']);
         Route::put('/user/profile/{userId}', [UserController::class, 'updateUserProfile']);
-        Route::post('/service/type', [ServiceController::class, 'postServiceType']);
-        Route::post('/service/postService', [ServiceController::class, 'postService']);
+        Route::post('/service/type', [ServiceController::class, 'insertServiceType']);
+        Route::post('/service/postService', [ServiceController::class, 'insertService']);
+        Route::post('/menu/postMenu', [MenuController::class, 'insertMenu']);
     });
 });
 
