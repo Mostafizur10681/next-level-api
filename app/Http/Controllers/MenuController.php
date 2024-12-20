@@ -43,7 +43,7 @@ class MenuController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'An error occurred during service creation.',
+                'error' => 'An error occurred during menu creation.',
                 'details' => $e->getMessage(),
             ], 500);
         }
