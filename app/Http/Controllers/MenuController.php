@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menus;
+use App\Models\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -130,4 +131,75 @@ class MenuController extends Controller
             ], 500);
         }
     }
+
+    //create role
+    public function insertRole(Request $request)
+    {
+        try {
+            // Validate the incoming request
+            $validated = $request->validate([
+                'role_name' => 'required|string|max:255',
+                'role_key' => 'required|string|max:50|unique:roles,role_key',
+                'grant_all_yn' => 'required|string|max:1|in:Y,N',
+                'active_yn' => 'required|string|max:1|in:Y,N',
+            ]);
+
+            // Create a new role
+            $role = Roles::create([
+                'role_name' => $validated['role_name'],
+                'role_key' => $validated['role_key'],
+                'grant_all_yn' => $validated['grant_all_yn'],
+                'active_yn' => $validated['active_yn'],
+                'insert_by' => Auth::user()->id,
+            ]);
+
+            // Return a success response
+            return response()->json([
+                'success' => true,
+                'message' => 'Role successfully inserted!',
+                'data' => $role,
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed.',
+                'details' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during role creation.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getRoles()
+    {
+        $roles = Roles::all();
+
+        if ($roles) {
+            return response()->json([
+                'menus' => $roles
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Menu not found'
+            ], 404);
+        }
+    }
+
+    public function getRole($roleId)
+    {
+        $role = Roles::find($roleId);
+
+        if ($role) {
+            return response()->json([
+                'role' => $role
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Menu not found'
+            ], 404);
+        }
+    }
+
 }

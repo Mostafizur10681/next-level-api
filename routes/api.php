@@ -28,19 +28,25 @@ Route::prefix('auth')->group(function () {
         Route::get('/user/{userId}', [UserController::class, 'user']);
         Route::put('/user/profile/{userId}', [UserController::class, 'updateUserProfile']);
 
+        Route::prefix('menu')->group(function () {
+            Route::post('/insertMenu', [MenuController::class, 'insertMenu']);
+            Route::get('/menus', [MenuController::class, 'getActiveMenus']);
+            Route::get('/menus/{menuId}', [MenuController::class, 'getActiveMenu']);
+            Route::put('/updateMenu/{menuId}', [MenuController::class, 'updateMenu']);
+        });
+
+        Route::prefix('role')->group(function () {
+            Route::post('/insertRole', [MenuController::class, 'insertRole']);
+            Route::get('/roles', [MenuController::class, 'getRoles']);
+            Route::get('/roles/{roleId}', [MenuController::class, 'getRole']);
+        });
+
         Route::prefix('service')->group(function () {
             Route::post('/type', [ServiceController::class, 'insertServiceType']);
             Route::post('/postService', [ServiceController::class, 'insertService']);
             Route::get('/services', [ServiceController::class, 'getActiveServices']);
             Route::get('/services/{serviceId}', [ServiceController::class, 'getActiveService']);
             Route::put('/updateService/{serviceId}', [ServiceController::class, 'updateService']);
-        });
-
-        Route::prefix('menu')->group(function () {
-            Route::post('/insertMenu', [MenuController::class, 'insertMenu']);
-            Route::get('/menus', [MenuController::class, 'getActiveMenus']);
-            Route::get('/menus/{menuId}', [MenuController::class, 'getActiveMenu']);
-            Route::put('/updateMenu/{menuId}', [MenuController::class, 'updateMenu']);
         });
     });
 });
