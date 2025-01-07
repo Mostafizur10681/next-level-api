@@ -17,11 +17,13 @@ use App\Http\Controllers\MenuController;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+Route::get('/users', [UserController::class, 'users']);
 
-    // Apply middleware to the group of authenticated routes
+Route::prefix('auth')->group(function () {
+    // Apply middleware to the group of authentic
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/users', [UserController::class, 'users']);
