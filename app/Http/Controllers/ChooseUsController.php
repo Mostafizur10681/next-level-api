@@ -27,7 +27,6 @@ class ChooseUsController extends Controller
                 'chooseUs' => $choose,
             ], 200);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return response()->json([
                 'error' => 'An error occurred during choose us creation!!.',
                 'details' => $e->getMessage()
@@ -79,7 +78,7 @@ class ChooseUsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Choose us successfully updated.',
+                'message' => 'Choose us successfully updated!',
                 'data' => $choose,
             ], 200);
         } catch (\Exception $e) {

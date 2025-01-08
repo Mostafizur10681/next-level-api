@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ChooseUsController;
+use App\Http\Controllers\FAQController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -56,6 +58,13 @@ Route::prefix('auth')->group(function () {
             Route::get('/chooses', [ChooseUsController::class, 'getActiveChooseUs']);
             Route::get('/choose/{chooseId}', [ChooseUsController::class, 'getActiveSigleChooseUs']);
             Route::put('/choose/{chooseId}', [ChooseUsController::class, 'updateChooseUs']);
+        });
+
+        Route::prefix('faq')->group(function () {
+            Route::post('/faq', [FAQController::class, 'insertFAQ']);
+            Route::get('/faqs', [FAQController::class, 'getActiveFAQ']);
+            Route::get('/faq/{chooseId}', [FAQController::class, 'getActiveSigleFAQ']);
+            Route::put('/faq/{faqId}', [FAQController::class, 'updateFAQ']);
         });
     });
 });
