@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\MenuController;
-
+use App\Http\Controllers\ChooseUsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -49,6 +49,13 @@ Route::prefix('auth')->group(function () {
             Route::get('/services', [ServiceController::class, 'getActiveServices']);
             Route::get('/services/{serviceId}', [ServiceController::class, 'getActiveService']);
             Route::put('/updateService/{serviceId}', [ServiceController::class, 'updateService']);
+        });
+
+        Route::prefix('chooseUs')->group(function () {
+            Route::post('/choose', [ChooseUsController::class, 'insertChooseUs']);
+            Route::get('/chooses', [ChooseUsController::class, 'getActiveChooseUs']);
+            Route::get('/choose/{chooseId}', [ChooseUsController::class, 'getActiveSigleChooseUs']);
+            Route::put('/choose/{chooseId}', [ChooseUsController::class, 'updateChooseUs']);
         });
     });
 });
