@@ -63,7 +63,7 @@ Route::prefix('auth')->group(function () {
         Route::prefix('faq')->group(function () {
             Route::post('/faq', [FAQController::class, 'insertFAQ']);
             Route::get('/faqs', [FAQController::class, 'getActiveFAQ']);
-            Route::get('/faq/{chooseId}', [FAQController::class, 'getActiveSigleFAQ']);
+            Route::get('/faq/{faqId}', [FAQController::class, 'getActiveSigleFAQ']);
             Route::put('/faq/{faqId}', [FAQController::class, 'updateFAQ']);
         });
     });

@@ -51,7 +51,7 @@ class FAQController extends Controller
 
     public function getActiveSigleFAQ($faqId)
     {
-        $faq = ChooseUs::find($faqId);
+        $faq = FAQ::find($faqId);
 
         if ($faq) {
             return response()->json([
@@ -66,10 +66,9 @@ class FAQController extends Controller
 
     public function updateFAQ(Request $request, $faqId)
     {
-         $postdata= $request->all();
+        $postdata= $request->all();
         try {
-            $faq = ChooseUs::find($faqId);
-
+            $faq = FAQ::find($faqId);
             $faq->faq_title = $postdata['faq_title'];
             $faq->faq_description = $postdata['faq_description'];
             $faq->active_yn = $postdata['active_yn'];

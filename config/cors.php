@@ -33,14 +33,20 @@
 //
 //];
 
+
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
-    'allowed_methods' => ['*'],
-    'allowed_origins' => ['http://localhost:3000'], // Replace with your frontend URL
-    'allowed_origins_patterns' => [],
-    'allowed_headers' => ['Content-Type', 'X-Requested-With', 'Authorization'],
-    'exposed_headers' => [],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'], // Include the sanctum/csrf-cookie route
+    'allowed_methods' => ['*'], // Allow all HTTP methods
+    'allowed_origins' => [
+        '*',
+        'https://api.nextlevelitsolution.com/',
+        'http://localhost:3000', // React or Vue app running locally
+        'http://192.168.0.108:3000', // Another device on the local network
+    ],
+    'allowed_origins_patterns' => [], // Use if you need dynamic patterns
+    'allowed_headers' => ['*'], // Allow all headers
+    'exposed_headers' => ['*'],
     'max_age' => 0,
-    'supports_credentials' => true,
+    'supports_credentials' => true, // Important for Sanctum
 ];
 
