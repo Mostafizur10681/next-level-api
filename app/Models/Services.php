@@ -18,10 +18,12 @@ class Services extends Model
         'service_min_price',
         'service_max_price',
         'service_title',
+        'service_sub_title',
         'service_description',
         'service_attachment',
         'created_by',
         'updated_by',
+        'active_yn'
     ];
 
 }

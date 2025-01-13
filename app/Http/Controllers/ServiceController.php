@@ -25,7 +25,7 @@ class ServiceController extends Controller
             return response()->json([
                 'message' => 'Service type created successfully!!.',
                 'serviceType' => $serviceType,
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             // Handle exceptions
             return response()->json([
@@ -70,12 +70,13 @@ class ServiceController extends Controller
             $service->file_type = $fileType ?? '';
             $service->file_name = $fileName ?? '';
             $service->created_by = Auth::user()->id;
+            $service->active_yn = $request->input('active_yn');
             $service->save();
 
             return response()->json([
                 'message' => 'Service created successfully!',
                 'service' => $service,
-            ], 201);
+            ], 200);
         } catch (ValidationException $e) {
             return response()->json([
                 'error' => 'Validation failed.',
@@ -99,7 +100,7 @@ class ServiceController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'Services not found'
             ], 404);
         }
     }
@@ -114,7 +115,7 @@ class ServiceController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'Service not found'
             ], 404);
         }
     }
@@ -163,7 +164,11 @@ class ServiceController extends Controller
             $service->service_max_price = $validatedData['service_max_price'] ?? '';
             $service->service_title = $validatedData['service_title'];
             $service->service_description = $validatedData['service_description'] ?? '';
+            $service->service_attachment = $filePath ?? '';
+            $service->file_type = $fileType ?? '';
+            $service->file_name = $fileName ?? '';
             $service->updated_by = Auth::user()->id;
+            $service->active_yn = $request->input('active_yn');
             $service->save();
 
             return response()->json([
