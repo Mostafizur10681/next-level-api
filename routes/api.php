@@ -19,8 +19,6 @@ use App\Http\Controllers\FAQController;
 |
 */
 
-Route::get('/users', [UserController::class, 'users']);
-
 Route::prefix('auth')->group(function () {
     // Apply middleware to the group of authentic
     Route::post('/login', [AuthController::class, 'login']);
