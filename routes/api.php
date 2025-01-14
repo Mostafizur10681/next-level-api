@@ -45,6 +45,9 @@ Route::prefix('auth')->group(function () {
 
         Route::prefix('service')->group(function () {
             Route::post('/type', [ServiceController::class, 'insertServiceType']);
+            Route::get('/types', [ServiceController::class, 'getServiceTypes']);
+            Route::get('/type/{typeId}', [ServiceController::class, 'getServiceType']);
+            Route::put('/type/{typeId}', [ServiceController::class, 'updateServiceType']);
             Route::post('/postService', [ServiceController::class, 'insertService']);
             Route::get('/services', [ServiceController::class, 'getActiveServices']);
             Route::get('/services/{serviceId}', [ServiceController::class, 'getActiveService']);

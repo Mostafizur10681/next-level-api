@@ -35,6 +35,59 @@ class ServiceController extends Controller
         }
     }
 
+    public function getServiceTypes()
+    {
+        $serviceTypes = LServiceType::all();
+
+        if ($serviceTypes) {
+            return response()->json([
+                'serviceTypes' => $serviceTypes
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Service Types not found'
+            ], 404);
+        }
+    }
+
+    public function getServiceType($serviceTypeId)
+    {
+        $serviceType = LServiceType::find($serviceTypeId);
+
+        if ($serviceType) {
+            return response()->json([
+                'serviceType' => $serviceType
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Service Types not found'
+            ], 404);
+        }
+    }
+
+    public function updateServiceType(Request $request, $chooseId)
+    {
+        $postdata= $request->all();
+        try {
+            $serviceType = LServiceType::find($chooseId);
+            $serviceType->service_type_name = $postdata['service_type_name'];
+            $serviceType->active_yn = $postdata['active_yn'];
+            $serviceType->updated_by = Auth::user()->id;
+            $serviceType->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Service type successfully updated!',
+                'data' => $serviceType,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during choose us update.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function insertService(Request $request)
     {
         try {
