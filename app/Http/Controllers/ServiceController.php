@@ -98,7 +98,7 @@ class ServiceController extends Controller
                 'service_max_price' => 'nullable|numeric',
                 'service_title' => 'required|string|max:255',
                 'service_description' => 'nullable|string',
-                'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240',  // 5MB max
+                // 'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240',  // 5MB max
             ]);
 
             // Handle file upload if a file is attached
@@ -184,7 +184,7 @@ class ServiceController extends Controller
                 'service_max_price' => 'nullable|numeric',
                 'service_title' => 'required|string|max:255',
                 'service_description' => 'nullable|string',
-                'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240', // 5MB max
+                // 'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240', // 5MB max
             ]);
 
             $service = Services::find($id);
