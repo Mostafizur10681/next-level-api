@@ -202,4 +202,52 @@ class MenuController extends Controller
         }
     }
 
+    public function updateRole(Request $request, $id)
+    {
+    
+        try {
+            // Validate input data
+           $validated = $request->validate([
+                'role_name' => 'required|string|max:255',
+                'role_key' => 'required|string|max:50|unique:roles,role_key',
+                'grant_all_yn' => 'required|string|max:1|in:Y,N',
+                'active_yn' => 'required|string|max:1|in:Y,N',
+            ]);
+
+            // Find the menu by id
+            $role = Roles::find($id);
+
+            // Check if the menu exists
+            if (!$role) {
+                return response()->json([
+                    'error' => 'Role not found.',
+                ], 404);
+            }
+
+            // Update menu attributes
+            $role->role_name =$validated['role_name'];
+            $role->role_key = $validated['role_key'];
+            $role->grant_all_yn = $validated['grant_all_yn'];
+            $role->active_yn = $validated['active_yn'];
+            $role->update_by = Auth::user()->id;
+            $role->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Role successfully updated.',
+                'data' => $role,
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed.',
+                'details' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during menu update.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

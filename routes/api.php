@@ -41,6 +41,7 @@ Route::prefix('auth')->group(function () {
             Route::post('/insertRole', [MenuController::class, 'insertRole']);
             Route::get('/roles', [MenuController::class, 'getRoles']);
             Route::get('/roles/{roleId}', [MenuController::class, 'getRole']);
+            Route::put('/roles/{roleId}', [MenuController::class, 'updateRole']);
         });
 
         Route::prefix('service')->group(function () {
