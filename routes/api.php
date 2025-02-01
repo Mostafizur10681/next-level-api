@@ -7,6 +7,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ChooseUsController;
 use App\Http\Controllers\FAQController;
+use App\Http\Controllers\BlogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,13 @@ Route::prefix('auth')->group(function () {
             Route::get('/faqs', [FAQController::class, 'getActiveFAQ']);
             Route::get('/faq/{faqId}', [FAQController::class, 'getActiveSigleFAQ']);
             Route::put('/faq/{faqId}', [FAQController::class, 'updateFAQ']);
+        });
+
+        Route::prefix('blogs')->group(function () {
+            Route::post('/blog', [BlogController::class, 'insertBlog']);
+            Route::get('/blogs', [BlogController::class, 'getActiveBlogs']);
+            Route::get('/blog/{blogId}', [BlogController::class, 'getActiveBlog']);
+            Route::put('/blog/{blogId}', [BlogController::class, 'updateBlog']);
         });
     });
 });
