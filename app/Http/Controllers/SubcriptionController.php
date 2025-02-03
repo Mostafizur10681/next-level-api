@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ContractUs;
+use App\Models\Subcription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class ContractUsController extends Controller
+class SubcriptionController extends Controller
 {
-    public function insertContract(Request $request)
+    public function insertSubcription(Request $request)
     {
         try {
             $postData = $request->all();
@@ -18,18 +18,16 @@ class ContractUsController extends Controller
                 'email' => 'required|email|max:100'
             ]);
 
-            // Create Contract
-            $contarct = new ContractUs();
-            $contarct->name = $validatedData['name'];
-            $contarct->email = $validatedData['email'];
-            $contarct->service_id = $postData['service_id'];
-            $contarct->message = $postData['message'];
-            $contarct->created_by = Auth::user()->id??'';
-            $contarct->save();
+            // Create Subcription
+            $subcription = new Subcription();
+            $subcription->name = $validatedData['name'];
+            $subcription->email = $validatedData['email'];
+            $subcription->created_by = Auth::user()->id??'';
+            $subcription->save();
 
             return response()->json([
-                'message' => 'Thanks for contract with us. Please stay connected with us!',
-                'contarct' => $contarct,
+                'message' => 'Thanks for your subcriptions. Please stay connected with us!',
+                'subcription' => $subcription,
             ], 200);
         } catch (ValidationException $e) {
             return response()->json([
@@ -38,38 +36,38 @@ class ContractUsController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'An error occurred during contract submit.',
+                'error' => 'An error occurred during subcription submit.',
                 'details' => $e->getMessage(),
             ], 500);
         }
     }
 
-    public function getContracts()
+    public function getSubcriptions()
     {
-        $contracts = ContractUs::get();
+        $subcriptions = Subcription::get();
 
-        if ($contracts) {
+        if ($subcriptions) {
             return response()->json([
-                'contracts' => $contracts
+                'subcriptions' => $subcriptions
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Blogs not found'
+                'message' => 'Subcription not found'
             ], 404);
         }
     }
 
-    public function getContract($contractId)
+    public function getSubcription($subcriptionId)
     {
-        $contract = ContractUs::find($contractId);
+        $subcription = Subcription::find($subcriptionId);
 
-        if ($contract) {
+        if ($subcription) {
             return response()->json([
-                'contract' => $contract
+                'subcription' => $subcription
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Contract not found'
+                'message' => 'Subcription not found'
             ], 404);
         }
     }

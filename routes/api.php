@@ -9,6 +9,7 @@ use App\Http\Controllers\ChooseUsController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContractUsController;
+use App\Http\Controllers\SubcriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,12 @@ Route::prefix('auth')->group(function () {
             Route::post('/contract', [ContractUsController::class, 'insertContract']);
             Route::get('/contracts', [ContractUsController::class, 'getContracts']);
             Route::get('/contract/{contractId}', [ContractUsController::class, 'getContract']);
+        });
+
+        Route::prefix('subcriptions')->group(function () {
+            Route::post('/subcription', [SubcriptionController::class, 'insertSubcription']);
+            Route::get('/subcriptions', [SubcriptionController::class, 'getSubcriptions']);
+            Route::get('/subcription/{subcriptionId}', [SubcriptionController::class, 'getSubcription']);
         });
     });
 });
