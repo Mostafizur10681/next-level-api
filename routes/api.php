@@ -8,7 +8,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ChooseUsController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\ContractUsController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\SubcriptionController;
 
 /*
@@ -79,10 +79,10 @@ Route::prefix('auth')->group(function () {
             Route::put('/blog/{blogId}', [BlogController::class, 'updateBlog']);
         });
 
-        Route::prefix('contracts')->group(function () {
-            Route::post('/contract', [ContractUsController::class, 'insertContract']);
-            Route::get('/contracts', [ContractUsController::class, 'getContracts']);
-            Route::get('/contract/{contractId}', [ContractUsController::class, 'getContract']);
+        Route::prefix('contacts')->group(function () {
+            Route::post('/contact', [ContactUsController::class, 'insertContact']);
+            Route::get('/contacts', [ContactUsController::class, 'getContacts']);
+            Route::get('/contact/{contactId}', [ContactUsController::class, 'getContact']);
         });
 
         Route::prefix('subcriptions')->group(function () {
