@@ -8,6 +8,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ChooseUsController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ContractUsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,12 @@ Route::prefix('auth')->group(function () {
             Route::get('/blogs', [BlogController::class, 'getActiveBlogs']);
             Route::get('/blog/{blogId}', [BlogController::class, 'getActiveBlog']);
             Route::put('/blog/{blogId}', [BlogController::class, 'updateBlog']);
+        });
+
+        Route::prefix('contracts')->group(function () {
+            Route::post('/contract', [ContractUsController::class, 'insertContract']);
+            Route::get('/contracts', [ContractUsController::class, 'getContracts']);
+            Route::get('/contract/{contractId}', [ContractUsController::class, 'getContract']);
         });
     });
 });
