@@ -10,65 +10,70 @@ use Illuminate\Validation\ValidationException;
 class BlogController extends Controller
 {
     public function insertBlog(Request $request)
-    {
-        try {
-            $validatedData = $request->validate([
-                'blog_title' => 'required|string|max:255',
-                'blog_sub_title' => 'required|string|max:255',
-                'blog_description' => 'required|string',
-                'author_name' => 'required|string',
-            ]);
+{
+    try {
+        $validatedData = $request->validate([
+            'blog_title' => 'required|string|max:255',
+            'blog_sub_title' => 'required|string|max:255',
+            'blog_description' => 'required|string',
+            'author_name' => 'required|string',
+        ]);
 
-            if ($request->hasFile('blog_img')) {
-                $blogFile = $request->file('blog_img');
+        $blogFilePath = '';
+        $blogFileType = '';
+        $blogFileName = '';
+        $authorFilePath = '';
+        $authorFileType = '';
+        $authorFileName = '';
 
-                // Get file details
-                $blogFileName = time() . '_' . $blogFile->getClientOriginalName();
-                $blogFilePath = $blogFile->storeAs('blog_img', $blogFileName, 'public');  // Save file to public storage
-                $blogFileType = $blogFile->getMimeType();  // Get the file MIME type
-            }
-
-            if ($request->hasFile('author_img')) {
-                $authorFile = $request->file('author_img');
-
-                // Get file details
-                $authorFileName = time() . '_' . $authorFile->getClientOriginalName();
-                $authorFilePath = $authorFile->storeAs('author_img', $authorFileName, 'public');
-                $authorFileType = $authorFile->getMimeType();
-            }
-
-            // Create Blog
-            $blog = new Blog();
-            $blog->blog_title = $validatedData['blog_title'];
-            $blog->blog_sub_title = $validatedData['blog_sub_title'];
-            $blog->blog_description = $validatedData['blog_description'];;
-            $blog->blog_img = $blogFilePath ?? '';
-            $blog->blog_img_type = $blogFileType ?? '';
-            $blog->blog_img_name = $blogFileName ?? '';
-            $blog->author_name = $validatedData['author_name'];
-            $blog->author_img = $authorFilePath ?? '';
-            $blog->author_img_type = $authorFileType ?? '';
-            $blog->author_img_name = $authorFileName ?? '';
-            $blog->created_by = Auth::user()->id;
-            $blog->active_yn = $request->input('active_yn');
-            $blog->save();
-
-            return response()->json([
-                'message' => 'Blog created successfully!',
-                'blog' => $blog,
-            ], 200);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'error' => 'Validation failed.',
-                'details' => $e->errors(),
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'An error occurred during blog creation.',
-                'details' => $e->getMessage(),
-            ], 500);
+        if ($request->hasFile('blog_img')) {
+            $blogFile = $request->file('blog_img');
+            $blogFileName = time() . '_' . $blogFile->getClientOriginalName();
+            $blogFilePath = $blogFile->storeAs('blog_img', $blogFileName, 'public');
+            $blogFileType = $blogFile->getMimeType();
         }
+
+        if ($request->hasFile('author_img')) {
+            $authorFile = $request->file('author_img');
+            $authorFileName = time() . '_' . $authorFile->getClientOriginalName();
+            $authorFilePath = $authorFile->storeAs('author_img', $authorFileName, 'public');
+            $authorFileType = $authorFile->getMimeType();
+        }
+
+        // Create Blog
+        $blog = new Blog();
+        $blog->blog_title = $validatedData['blog_title'];
+        $blog->blog_sub_title = $validatedData['blog_sub_title'];
+        $blog->blog_description = $validatedData['blog_description'];
+        $blog->blog_img = $blogFilePath;
+        $blog->blog_img_type = $blogFileType;
+        $blog->blog_img_name = $blogFileName;
+        $blog->author_name = $validatedData['author_name'];
+        $blog->author_img = $authorFilePath;
+        $blog->author_img_type = $authorFileType;
+        $blog->author_img_name = $authorFileName;
+        $blog->created_by = Auth::id();
+        $blog->active_yn = $request->input('active_yn');
+        $blog->save();
+
+        return response()->json([
+            'message' => 'Blog created successfully!',
+            'blog' => $blog,
+        ], 200);
+
+    } catch (ValidationException $e) {
+        return response()->json([
+            'error' => 'Validation failed.',
+            'details' => $e->errors(),
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'An error occurred during blog creation.',
+            'details' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
     public function getActiveBlogs()
     {
