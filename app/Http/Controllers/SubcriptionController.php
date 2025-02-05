@@ -22,7 +22,7 @@ class SubcriptionController extends Controller
             $subcription = new Subcription();
             $subcription->name = $validatedData['name'];
             $subcription->email = $validatedData['email'];
-            $subcription->created_by = Auth::user()->id??'';
+            $subcription->created_by = Auth::user()->id??1;
             $subcription->save();
 
             return response()->json([

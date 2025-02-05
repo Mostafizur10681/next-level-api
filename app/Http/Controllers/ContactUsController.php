@@ -24,7 +24,7 @@ class ContactUsController extends Controller
             $contact->email = $validatedData['email'];
             $contact->service_id = $postData['service_id'];
             $contact->message = $postData['message'];
-            $contact->created_by = Auth::user()->id??'';
+            $contact->created_by = Auth::user()->id??1;
             $contact->save();
 
             return response()->json([

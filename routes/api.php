@@ -26,6 +26,8 @@ Route::prefix('auth')->group(function () {
     // Apply middleware to the group of authentic
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/contact', [ContactUsController::class, 'insertContact']);
+    Route::post('/subcription', [SubcriptionController::class, 'insertSubcription']);
     
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -80,13 +82,11 @@ Route::prefix('auth')->group(function () {
         });
 
         Route::prefix('contacts')->group(function () {
-            Route::post('/contact', [ContactUsController::class, 'insertContact']);
             Route::get('/contacts', [ContactUsController::class, 'getContacts']);
             Route::get('/contact/{contactId}', [ContactUsController::class, 'getContact']);
         });
 
         Route::prefix('subcriptions')->group(function () {
-            Route::post('/subcription', [SubcriptionController::class, 'insertSubcription']);
             Route::get('/subcriptions', [SubcriptionController::class, 'getSubcriptions']);
             Route::get('/subcription/{subcriptionId}', [SubcriptionController::class, 'getSubcription']);
         });
