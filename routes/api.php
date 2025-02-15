@@ -37,7 +37,8 @@ Route::prefix('auth')->group(function () {
 
         Route::prefix('menu')->group(function () {
             Route::post('/insertMenu', [MenuController::class, 'insertMenu']);
-            Route::get('/menus', [MenuController::class, 'getActiveMenus']);
+            Route::get('/menus', [MenuController::class, 'menus']);
+            Route::get('/active-menus', [MenuController::class, 'getActiveMenus']);
             Route::get('/menus/{menuId}', [MenuController::class, 'getActiveMenu']);
             Route::put('/updateMenu/{menuId}', [MenuController::class, 'updateMenu']);
         });
@@ -45,6 +46,7 @@ Route::prefix('auth')->group(function () {
         Route::prefix('role')->group(function () {
             Route::post('/insertRole', [MenuController::class, 'insertRole']);
             Route::get('/roles', [MenuController::class, 'getRoles']);
+            Route::get('/active-roles', [MenuController::class, 'getActiveRoles']);
             Route::get('/roles/{roleId}', [MenuController::class, 'getRole']);
             Route::put('/roles/{roleId}', [MenuController::class, 'updateRole']);
         });

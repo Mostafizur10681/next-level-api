@@ -51,9 +51,24 @@ class MenuController extends Controller
     }
 
     //get menus
-    public function getActiveMenus()
+    public function menus()
     {
         $menus = Menus::all();
+
+        if ($menus) {
+            return response()->json([
+                'menus' => $menus
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Menu not found'
+            ], 404);
+        }
+    }
+
+    public function getActiveMenus()
+    {
+        $menus = Menus::where('active_yn', 'Y')->get();
 
         if ($menus) {
             return response()->json([
@@ -201,6 +216,22 @@ class MenuController extends Controller
             ], 404);
         }
     }
+
+    public function getActiveRoles()
+    {
+        $roles = Roles::where('active_yn', 'Y')->get();
+
+        if ($roles) {
+            return response()->json([
+                'roles' => $roles
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Roles not found'
+            ], 404);
+        }
+    }
+
 
     public function updateRole(Request $request, $id)
     {
