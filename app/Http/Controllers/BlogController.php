@@ -19,15 +19,6 @@ class BlogController extends Controller
                 'author_name' => 'required|string',
             ]);
 
-            // Convert image files to base64 if they exist
-            // $blogImage = $request->hasFile('blog_img')
-            //     ? 'data:' . $request->file('blog_img')->getMimeType() . ';base64,' . base64_encode(file_get_contents($request->file('blog_img')))
-            //     : null;
-
-            // $authorImage = $request->hasFile('author_img')
-            //     ? 'data:' . $request->file('author_img')->getMimeType() . ';base64,' . base64_encode(file_get_contents($request->file('author_img')))
-            //     : null;
-
             $blogImage = $this->saveBase64Image($request->blog_img, 'blog_img');
             $authorImage = $this->saveBase64Image($request->author_img, 'author_img');
 
@@ -129,6 +120,7 @@ class BlogController extends Controller
                 'author_name' => 'required|string',
             ]);
 
+            // Find the blog entry
             $blog = Blog::find($id);
 
             if (!$blog) {
@@ -137,43 +129,18 @@ class BlogController extends Controller
                 ], 404);
             }
 
-            if ($request->hasFile('blog_img')) {
-                $blogFile = $request->file('blog_img');
+            // Process base64 images (only update if new images are provided)
+            $blogImage = $request->blog_img ? $this->saveBase64Image($request->blog_img) : $blog->blog_img;
+            $authorImage = $request->author_img ? $this->saveBase64Image($request->author_img) : $blog->author_img;
 
-                // Get file details
-                $blogFileName = time() . '_' . $blogFile->getClientOriginalName();
-                $blogFilePath = $blogFile->storeAs('blog_img', $blogFileName, 'public');  // Save file to public storage
-                $blogFileType = $blogFile->getMimeType();  // Get the file MIME type
-
-                $service->blog_img = $blogFilePath;
-                $service->blog_img_type = $blogFileType;
-                $service->blog_img_name = $blogFileName;
-            }
-
-            if ($request->hasFile('author_img')) {
-                $authorFile = $request->file('author_img');
-
-                // Get file details
-                $authorFileName = time() . '_' . $authorFile->getClientOriginalName();
-                $authorFilePath = $authorFile->storeAs('author_img', $authorFileName, 'public');
-                $authorFileType = $authorFile->getMimeType();
-
-                $service->author_img = $authorFilePath;
-                $service->author_img_type = $authorFileType;
-                $service->author_img_name = $author_img_name;
-            }
-
+            // Update blog details
             $blog->blog_title = $validatedData['blog_title'];
             $blog->blog_sub_title = $validatedData['blog_sub_title'];
-            $blog->blog_description = $validatedData['blog_description'] ?? '';;
-            $blog->blog_img = $blogFilePath ?? '';
-            $blog->blog_img_type = $blogFileType ?? '';
-            $blog->blog_img_name = $blogFileName ?? '';
+            $blog->blog_description = $validatedData['blog_description'];
+            $blog->blog_img = $blogImage;
             $blog->author_name = $validatedData['author_name'];
-            $blog->author_img = $authorFilePath ?? '';
-            $blog->author_img_type = $authorFileType ?? '';
-            $blog->author_img_name = $author_img_name ?? '';
-            $blog->updated_by = Auth::user()->id;
+            $blog->author_img = $authorImage;
+            $blog->updated_by = Auth::id();
             $blog->active_yn = $request->input('active_yn');
             $blog->save();
 
