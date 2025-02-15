@@ -97,19 +97,11 @@ class ServiceController extends Controller
                 'service_min_price' => 'nullable|numeric',
                 'service_max_price' => 'nullable|numeric',
                 'service_title' => 'required|string|max:255',
-                'service_description' => 'nullable|string',
-                // 'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240',  // 5MB max
+                'service_description' => 'nullable|string'
             ]);
 
-            // Handle file upload if a file is attached
-            if ($request->hasFile('service_attachment')) {
-                $file = $request->file('service_attachment');
-
-                // Get file details
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('service_attachments', $fileName, 'public');  // Save file to public storage
-                $fileType = $file->getMimeType();  // Get the file MIME type
-            }
+            // Process base64 image (if provided)
+            $serviceAttachment = $this->saveBase64Image($request->service_attachment);
 
             // Create Service
             $service = new Services();
@@ -119,9 +111,7 @@ class ServiceController extends Controller
             $service->service_max_price = $validatedData['service_max_price'] ?? '';
             $service->service_title = $validatedData['service_title'];
             $service->service_description = $validatedData['service_description'] ?? '';
-            $service->service_attachment = $filePath ?? '';
-            $service->file_type = $fileType ?? '';
-            $service->file_name = $fileName ?? '';
+            $service->service_attachment = $serviceAttachment ?? ''; // Store base64 image
             $service->created_by = Auth::user()->id;
             $service->active_yn = $request->input('active_yn');
             $service->save();
@@ -143,9 +133,10 @@ class ServiceController extends Controller
         }
     }
 
+
     public function getActiveServices()
     {
-        $services = Services::where('active_yn', 'Y')->get();
+        $services = Services::all();
 
         if ($services) {
             return response()->json([
@@ -184,9 +175,10 @@ class ServiceController extends Controller
                 'service_max_price' => 'nullable|numeric',
                 'service_title' => 'required|string|max:255',
                 'service_description' => 'nullable|string',
-                // 'service_attachment' => 'nullable|mimes:jpeg,png,jpg,pdf,doc,docx,zip|max:5240', // 5MB max
+                'service_attachment' => 'nullable|string', // Base64 string
             ]);
 
+            // Find the service
             $service = Services::find($id);
 
             if (!$service) {
@@ -195,19 +187,10 @@ class ServiceController extends Controller
                 ], 404);
             }
 
-            // Handle file upload if a new file is provided
-            if ($request->hasFile('service_attachment')) {
-                $file = $request->file('service_attachment');
-
-                // Get file details
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('service_attachments', $fileName, 'public'); // Save file to public storage
-                $fileType = $file->getMimeType(); // Get the file MIME type
-
-                // Update file-related fields
-                $service->service_attachment = $filePath;
-                $service->file_type = $fileType;
-                $service->file_name = $fileName;
+            // Handle base64 image (if provided)
+            if ($request->has('service_attachment')) {
+                $serviceAttachment = $this->saveBase64Image($request->service_attachment);
+                $service->service_attachment = $serviceAttachment;
             }
 
             // Update other service attributes
@@ -217,9 +200,6 @@ class ServiceController extends Controller
             $service->service_max_price = $validatedData['service_max_price'] ?? '';
             $service->service_title = $validatedData['service_title'];
             $service->service_description = $validatedData['service_description'] ?? '';
-            $service->service_attachment = $filePath ?? '';
-            $service->file_type = $fileType ?? '';
-            $service->file_name = $fileName ?? '';
             $service->updated_by = Auth::user()->id;
             $service->active_yn = $request->input('active_yn');
             $service->save();
@@ -239,6 +219,21 @@ class ServiceController extends Controller
                 'details' => $e->getMessage(),
             ], 500);
         }
+    }
+
+
+    private function saveBase64Image($base64String)
+    {
+        if (!$base64String) {
+            return null; // No image provided
+        }
+
+        // Ensure it's a valid base64 string
+        if (preg_match('/^data:image\/(\w+);base64,/', $base64String, $matches)) {
+            return $base64String; // Return base64 directly
+        }
+
+        return null; // Invalid format
     }
 
 

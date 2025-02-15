@@ -36,7 +36,7 @@ class ChooseUsController extends Controller
 
     public function getActiveChooseUs()
     {
-        $chooseUs = ChooseUs::where('active_yn', 'Y')->get();
+        $chooseUs = ChooseUs::all();
 
         if ($chooseUs) {
             return response()->json([
@@ -44,7 +44,7 @@ class ChooseUsController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'Choose us list not found'
             ], 404);
         }
     }
@@ -59,7 +59,7 @@ class ChooseUsController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'Choose us not found'
             ], 404);
         }
     }

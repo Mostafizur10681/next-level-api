@@ -44,7 +44,7 @@ class SubcriptionController extends Controller
 
     public function getSubcriptions()
     {
-        $subcriptions = Subcription::get();
+        $subcriptions = Subcription::all();
 
         if ($subcriptions) {
             return response()->json([

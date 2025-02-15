@@ -36,7 +36,7 @@ class FAQController extends Controller
 
     public function getActiveFAQ()
     {
-        $faq = FAQ::where('active_yn', 'Y')->get();
+        $faq = FAQ::all();
 
         if ($faq) {
             return response()->json([
@@ -44,7 +44,7 @@ class FAQController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'FAQ list not found'
             ], 404);
         }
     }
@@ -59,7 +59,7 @@ class FAQController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'FAQ not found'
             ], 404);
         }
     }

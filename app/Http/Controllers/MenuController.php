@@ -53,7 +53,7 @@ class MenuController extends Controller
     //get menus
     public function getActiveMenus()
     {
-        $menus = Menus::where('active_yn', 'Y')->get();
+        $menus = Menus::all();
 
         if ($menus) {
             return response()->json([
@@ -109,7 +109,7 @@ class MenuController extends Controller
             $menu->base_url = $validated['base_url'];
             $menu->menu_icon = $validated['menu_icon'] ?? $menu->menu_icon; // Preserve previous icon if not provided
             $menu->active_yn = $validated['active_yn'];
-            $menu->update_by = Auth::user()->id; // Update the user who made the changes
+            $menu->update_by = Auth::user()->id;
 
             // Save the changes
             $menu->save();
@@ -182,7 +182,7 @@ class MenuController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'Roles not found'
             ], 404);
         }
     }
@@ -197,7 +197,7 @@ class MenuController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Menu not found'
+                'message' => 'Role not found'
             ], 404);
         }
     }
