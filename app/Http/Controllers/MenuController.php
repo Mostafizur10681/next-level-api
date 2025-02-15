@@ -204,29 +204,33 @@ class MenuController extends Controller
 
     public function updateRole(Request $request, $id)
     {
-    
         try {
-            // Validate input data
-           $validated = $request->validate([
-                'role_name' => 'required|string|max:255',
-                'role_key' => 'required|string|max:50|unique:roles,role_key',
-                'grant_all_yn' => 'required|string|max:1|in:Y,N',
-                'active_yn' => 'required|string|max:1|in:Y,N',
-            ]);
-
-            // Find the menu by id
+            // Find the role by id
             $role = Roles::find($id);
 
-            // Check if the menu exists
+            // Check if the role exists
             if (!$role) {
                 return response()->json([
                     'error' => 'Role not found.',
                 ], 404);
             }
 
-            // Update menu attributes
-            $role->role_name =$validated['role_name'];
-            $role->role_key = $validated['role_key'];
+            // Validate input data (exclude role_key from validation)
+            $validated = $request->validate([
+                'role_name' => 'required|string|max:255',
+                'grant_all_yn' => 'required|string|max:1|in:Y,N',
+                'active_yn' => 'required|string|max:1|in:Y,N',
+            ]);
+
+            // Check if role_key is being modified
+            if ($request->has('role_key') && $request->role_key !== $role->role_key) {
+                return response()->json([
+                    'error' => 'Role key cannot be changed.',
+                ], 400);
+            }
+
+            // Update role attributes
+            $role->role_name = $validated['role_name'];
             $role->grant_all_yn = $validated['grant_all_yn'];
             $role->active_yn = $validated['active_yn'];
             $role->update_by = Auth::user()->id;
@@ -244,7 +248,7 @@ class MenuController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'An error occurred during menu update.',
+                'error' => 'An error occurred during role update.',
                 'details' => $e->getMessage(),
             ], 500);
         }
