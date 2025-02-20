@@ -43,6 +43,13 @@ Route::prefix('auth')->group(function () {
             Route::put('/updateMenu/{menuId}', [MenuController::class, 'updateMenu']);
         });
 
+        Route::prefix('submenu')->group(function () {
+            Route::post('/submenu', [MenuController::class, 'insertSubMenu']);
+            Route::get('/submenus', [MenuController::class, 'submenus']);
+            Route::get('/submenu/{subMenuId}', [MenuController::class, 'submenu']);
+            Route::put('/submenu/{subMenuId}', [MenuController::class, 'updateSubMenu']);
+        });
+
         Route::prefix('role')->group(function () {
             Route::post('/insertRole', [MenuController::class, 'insertRole']);
             Route::get('/roles', [MenuController::class, 'getRoles']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menus;
 use App\Models\Roles;
+use App\Models\SubMenus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -133,6 +134,127 @@ class MenuController extends Controller
                 'success' => true,
                 'message' => 'Menu successfully updated.',
                 'data' => $menu,
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed.',
+                'details' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during menu update.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    //Create Sub menus
+    public function insertSubMenu(Request $request)
+    {
+        try {
+
+            $validated = $request->validate([
+                'sub_menu_name' => 'required|string|max:255',
+                'menu_id' => 'required|integer',
+                'base_url' => 'required|url',
+                'menu_icon' => 'nullable|string|max:1000',
+                'menu_order_no' => 'required|integer|unique:sub_menus,menu_order_no',
+                'active_yn' => 'required|string|max:1'
+            ]);
+
+            $subMenu = SubMenus::create([
+                'sub_menu_name' => $validated['sub_menu_name'],
+                'menu_id' => $validated['menu_id'],
+                'base_url' => $validated['base_url'],
+                'menu_icon' => $validated['menu_icon'],
+                'menu_order_no' => $validated['menu_order_no'],
+                'active_yn' => $validated['active_yn'],
+                'insert_by' => Auth::user()->id,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sub Menu successfully inserted!!.',
+                'data' => $subMenu,
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed.',
+                'details' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred during menu creation.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    //get Sub menus
+    public function submenus()
+    {
+        $subMenus = SubMenus::all();
+
+        if ($subMenus) {
+            return response()->json([
+                'submenus' => $subMenus
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Sub Menu not found'
+            ], 404);
+        }
+    }
+
+     public function submenu($subMenuId)
+    {
+        $submenu = SubMenus::find($subMenuId);
+
+        if ($submenu) {
+            return response()->json([
+                'submenu' => $submenu
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Sub Menu not found'
+            ], 404);
+        }
+    }
+
+    public function updateSubMenu(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'sub_menu_name' => 'required|string|max:255',
+                'menu_id' => 'required|integer',
+                'base_url' => 'required|url',
+                'menu_icon' => 'nullable|string|max:1000',
+                'menu_order_no' => "required|integer",
+                'active_yn' => 'required|string|max:1'
+            ]);
+
+            $subMenu = SubMenus::find($id);
+
+            if (!$subMenu) {
+                return response()->json([
+                    'error' => 'Sub Menu not found.',
+                ], 404);
+            }
+
+            $subMenu->update([
+                'sub_menu_name' => $validated['sub_menu_name'],
+                'menu_id' => $validated['menu_id'],
+                'base_url' => $validated['base_url'],
+                'menu_icon' => $validated['menu_icon'],
+                'menu_order_no' => $validated['menu_order_no'],
+                'active_yn' => $validated['active_yn'],
+                'update_by' => Auth::id(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sub Menu successfully updated!',
+                'data' => $subMenu,
             ], 200);
         } catch (ValidationException $e) {
             return response()->json([
