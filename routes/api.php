@@ -10,6 +10,10 @@ use App\Http\Controllers\FAQController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\SubcriptionController;
+use App\Http\Controllers\UserRolesController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +60,10 @@ Route::prefix('auth')->group(function () {
             Route::get('/active-roles', [MenuController::class, 'getActiveRoles']);
             Route::get('/roles/{roleId}', [MenuController::class, 'getRole']);
             Route::put('/roles/{roleId}', [MenuController::class, 'updateRole']);
+        });
+
+        Route::prefix('userRoles')->group(function () {
+            Route::post('/userRole', [UserRolesController::class, 'insertUserRole']);
         });
 
         Route::prefix('service')->group(function () {
