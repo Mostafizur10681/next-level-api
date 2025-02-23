@@ -64,6 +64,8 @@ Route::prefix('auth')->group(function () {
 
         Route::prefix('userRoles')->group(function () {
             Route::post('/userRole', [UserRolesController::class, 'insertUserRole']);
+            Route::get('/userRole/{userId}', [UserRolesController::class, 'getUserRoles']);
+            Route::put('/userRole', [UserRolesController::class, 'updateUserRoles']);
         });
 
         Route::prefix('service')->group(function () {
