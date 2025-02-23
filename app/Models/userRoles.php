@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserRole extends Model
+class UserRoles extends Model
 {
     protected $table = 'user_roles';
     public $incrementing = false;
@@ -28,6 +28,6 @@ class UserRole extends Model
 
     public function role()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'role_id');
+        return $this->belongsTo(Roles::class, 'role_id', 'role_id');
     }
 }
