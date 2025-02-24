@@ -12,8 +12,7 @@ use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\SubcriptionController;
 use App\Http\Controllers\UserRolesController;
 use App\Http\Controllers\userMenusController;
-
-
+use App\Http\Controllers\NewsLetterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +31,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/contact', [ContactUsController::class, 'insertContact']);
     Route::post('/subcription', [SubcriptionController::class, 'insertSubcription']);
+    Route::post('/newsLetter', [NewsLetterController::class, 'insertNewsLetter']);
     
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -107,6 +107,10 @@ Route::prefix('auth')->group(function () {
         Route::prefix('contacts')->group(function () {
             Route::get('/contacts', [ContactUsController::class, 'getContacts']);
             Route::get('/contact/{contactId}', [ContactUsController::class, 'getContact']);
+        });
+
+        Route::prefix('newsletter')->group(function () {
+            Route::get('/newsletters', [NewsLetterController::class, 'getNewsLetter']);
         });
 
         Route::prefix('subcriptions')->group(function () {
