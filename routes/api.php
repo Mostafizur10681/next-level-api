@@ -11,7 +11,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\SubcriptionController;
 use App\Http\Controllers\UserRolesController;
-
+use App\Http\Controllers\userMenusController;
 
 
 
@@ -66,6 +66,10 @@ Route::prefix('auth')->group(function () {
             Route::post('/userRole', [UserRolesController::class, 'insertUserRole']);
             Route::get('/userRole/{userId}', [UserRolesController::class, 'getUserRoles']);
             Route::put('/userRole', [UserRolesController::class, 'updateUserRoles']);
+        });
+
+        Route::prefix('userMenus')->group(function () {
+            Route::post('/userMenu', [userMenusController::class, 'insertUserMenu']);
         });
 
         Route::prefix('service')->group(function () {
