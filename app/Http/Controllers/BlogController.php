@@ -299,7 +299,6 @@ class BlogController extends Controller
             }
 
             $blogImage = base64_decode($blogImgBase64, true);
-            dd($blogImgBase64);
             if ($blogImage === false) {
                 return response()->json(['error' => 'Failed to decode Base64 blog image'], 400);
             $blog->blog_img = $blogImage;
